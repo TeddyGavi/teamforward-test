@@ -1,0 +1,8 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "prettier.semi": false,
+
+  "cSpell.words": ["Chingu", "cloudinary"]
+}
