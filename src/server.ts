@@ -5,12 +5,11 @@ import cookieParser from 'cookie-parser'
 // const passport = require("passport");
 import { Server } from 'socket.io'
 import { CorsConfig } from './utils/index'
-import ChatController from './controllers/messages.controller'
+import { CHAT } from './controllers/index'
 
 // set up
 dotenv.config()
 const app = express()
-const Chat = new ChatController()
 
 // configure Passport
 // require("./Config/passport");
@@ -33,14 +32,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 require('./lib/mongoose.config')
 require('./routes/teamForward.routes')(app)
 
-if (process.env.isProduction) {
-  const path = require('path')
-  app.use(express.static(path.join(__dirname, '../client/build')))
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build/index.html'))
-  })
-}
-
 const server = app.listen(port, () => console.log(`listening on port: ${port}`))
 
 const io: Server = new Server(server, {
@@ -53,6 +44,6 @@ io.on('connection', async (socket) => {
   })
 
   socket.on('clientMessage', (data) => {
-    Chat.createNewMessage(io, data)
+    CHAT.createNewMessage(io, data)
   })
 })

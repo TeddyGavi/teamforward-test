@@ -13,8 +13,8 @@
   "homepage": "https://github.com/chingu-voyages/V44-TeamForward#readme",
   "scripts": {
     "build": "tsc -p .",
-    "start": "NODE_PATH=./dist NODE_ENV=production node ./src/server.js",
-    "dev": "NODE_ENV=development nodemon ./src/server.js",
+    "start": "NODE_PATH=./dist NODE_ENV=production node ./dist/server.js",
+    "dev": "NODE_ENV=development nodemon ./src/server.ts",
     "repl": "node",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",
