@@ -12,9 +12,14 @@
   },
   "homepage": "https://github.com/chingu-voyages/V44-TeamForward#readme",
   "scripts": {
-    "start": "NODE_ENV=production node ./src/server.js",
+    "build": "tsc -p .",
+    "start": "NODE_PATH=./dist NODE_ENV=production node ./src/server.js",
     "dev": "NODE_ENV=development nodemon ./src/server.js",
-    "repl": "node"
+    "repl": "node",
+    "format:check": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "lint:check": "eslint .",
+    "lint:fix": "eslint --fix ."
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -35,6 +40,23 @@
     "socket.io": "^4.6.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "@types/bcrypt": "5.0.0",
+    "@types/body-parser": "1.19.3",
+    "@types/cookie-parser": "1.4.4",
+    "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.3",
+    "@types/mongoose-unique-validator": "^1.0.7",
+    "@types/node": "^20.6.2",
+    "@types/node-fetch": "^2.6.5",
+    "@typescript-eslint/eslint-plugin": "^6.7.2",
+    "@typescript-eslint/parser": "^6.7.2",
+    "concurrently": "^8.2.1",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "nodemon": "^3.0.1",
+    "prettier": "^3.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   }
 }
