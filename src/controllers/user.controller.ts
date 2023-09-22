@@ -1,4 +1,4 @@
-import { UserModel, PhotoModel } from '../models/index'
+import { UserModel, PhotoModel, IPhoto } from '../models/index'
 import { Types } from 'mongoose'
 import { log } from '../utils/logging'
 import mongoose from 'mongoose'
@@ -15,7 +15,7 @@ export class UserController {
     UserModel.create(req.body)
       .then((newUser) => {
         const payload = { id: newUser._id }
-        const userToken = jwt.sign(payload, process.env.SecretKeyOne)
+        const userToken = jwt.sign(payload, (process.env.SecretKeyOne ??= ''))
         res
           .cookie('jwt-token', userToken, {
             httpOnly: true,
@@ -64,7 +64,7 @@ export class UserController {
       {
         id: user._id,
       },
-      process.env.SecretKeyOne
+      (process.env.SecretKeyOne ??= '')
     )
     res
       .cookie('jwt-token', userToken, {
@@ -109,8 +109,8 @@ export class UserController {
     // const interests = req.query['interests'];
     const activities = req.query['activities']
     const results = await getUsersWithinRadius(
-      userInfo.location.coordinates,
-      userInfo.radius,
+      userInfo?.location?.coordinates,
+      userInfo?.radius,
       activities,
       req.userId
     )
@@ -217,7 +217,7 @@ export class UserController {
     UserModel.findByIdAndUpdate(
       { _id: req.params.id },
       {
-        photos: currentUser.photos,
+        photos: currentUser!.photos,
       },
       { new: true }
     )
@@ -232,14 +232,14 @@ export class UserController {
 
   // Change Profile Picture by clicking on photos in gallery
   async updateGallery(req, res) {
-    let newImgUrl, newImgId
+    let newImgUrl: string, newImgId: string
     const currentUser = await UserModel.findById({ _id: req.params.id })
     try {
-      const foundPhoto = currentUser.photos.find((photo) =>
-        photo._id.equals(ObjectId(req.params.photoId))
+      const foundPhoto = currentUser!.photos.find((photo) =>
+        photo._id.equals(new ObjectId(req.params.photoId))
       )
-      newImgUrl = foundPhoto.cloudinaryImgUrl
-      newImgId = foundPhoto.cloudinaryId
+      newImgUrl = foundPhoto!.cloudinaryImgUrl
+      newImgId = foundPhoto!.cloudinaryId
     } catch (exception) {
       res.status(400).json(exception)
       log('Something went wrong with finding photo')

@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  ts-node-docker:
+    build:
+      context: .
+      target: base
+    volumes:
+      - ./src:/app/src
+      - ./nodemon.json:/app/nodemon.json
+    container_name: teamforward-api 
+    expose:
+      - '8080'
+    ports:
+      - '3000:3000'
+    command: npm run dev

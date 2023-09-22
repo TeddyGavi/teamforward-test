@@ -1,6 +1,6 @@
 const LOGGING_ENABLED = false
 
-export const log = (...messages: string[]): void => {
+export const log = (...messages): void => {
   if (LOGGING_ENABLED) {
     console.log(messages)
   }
