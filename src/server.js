@@ -10,6 +10,12 @@ const socketio = require('socket.io')
 const port = process.env.PORTKEY;
 const ChatController = require("./controllers/messages.controller")
 
+let origin = process.env.REDIRECTKEYTWO
+
+if (process.env.NODE_ENV === 'development') {
+  origin = 'http://localhost:3000'
+}
+
 // configure Passport
 // require("./Config/passport");
 
@@ -20,7 +26,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: process.env.REDIRECTKEYTWO,
+    origin: origin,
     methods: "GET,POST,PATCH,PUT,DELETE",
     credentials: true,
   })
@@ -34,19 +40,12 @@ app.use((req, res, next) => {
 require("./Config/mongoose.config");
 require("./routes/teamForward.routes")(app);
 
-if (process.env.isProduction) {
-  const path = require('path');
-  app.use(express.static(path.join(__dirname, '../client/build')));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build/index.html'));
-  });
-}
 
 const server = app.listen(port, () => console.log(`listening on port: ${port}`));
 
 const io = socketio(server, {
   cors: {
-    origin: process.env.REDIRECTKEYTWO,
+    origin: origin,
     methods: ['GET', 'POST'],
     allowedHeaders: ['*'],
     credentials: true,
