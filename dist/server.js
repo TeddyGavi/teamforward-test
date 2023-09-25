@@ -1,5 +1,5 @@
 const port = process.env.PORTKEY;
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 import express from 'express';
 import cookieParser from 'cookie-parser';
 // const passport = require("passport");

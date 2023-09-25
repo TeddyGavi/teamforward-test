@@ -1,4 +1,5 @@
 import { UserModel, PhotoModel, IPhoto } from '../models/index'
+import { Request, Response } from 'express'
 import { Types } from 'mongoose'
 import { log } from '../utils/logging'
 import mongoose from 'mongoose'
@@ -11,7 +12,7 @@ const ObjectId = Types.ObjectId
 export class UserController {
   constructor() {}
 
-  createNewUser(req, res) {
+  createNewUser(req: Request, res: Response) {
     UserModel.create(req.body)
       .then((newUser) => {
         const payload = { id: newUser._id }
@@ -30,7 +31,7 @@ export class UserController {
       })
   }
 
-  loggedInUser(req, res) {
+  loggedInUser(req: Request, res: Response) {
     log('userId', req.userId)
     UserModel.findOne({ _id: req.userId }, { password: 0 })
       .then((loggedUser) => {
@@ -42,7 +43,7 @@ export class UserController {
       })
   }
 
-  async login(req, res) {
+  async login(req: Request, res: Response) {
     log(req.body.email, req.body.password)
     if (!req.body.email || !req.body.password) {
       return res.status(400).send('Something went wrong with login')
@@ -75,8 +76,8 @@ export class UserController {
       .json({ msg: 'success!', user: user })
   }
 
-  findOneUser(req, res) {
-    let findId
+  findOneUser(req: Request, res: Response) {
+    let findId: Types.ObjectId
     try {
       findId = new mongoose.Types.ObjectId(req.params.id)
     } catch (err) {
@@ -101,13 +102,14 @@ export class UserController {
       })
   }
 
-  async findAllUsers(req, res) {
+  async findAllUsers(req: Request, res: Response) {
     const userInfo = await UserModel.findOne(
       { _id: req.userId },
       { password: 0 }
     )
     // const interests = req.query['interests'];
-    const activities = req.query['activities']
+    const activities = req.query['activities'].toString()
+
     const results = await getUsersWithinRadius(
       userInfo?.location?.coordinates,
       userInfo?.radius,
@@ -117,7 +119,7 @@ export class UserController {
     res.json(results)
   }
 
-  async updateUser(req, res) {
+  async updateUser(req: Request, res: Response) {
     let body = { ...req.body }
 
     log('FIRST LOG HERE REQ.BODY:', body, 'FIRST LOG REQ.PARAMS', req.params)
@@ -189,12 +191,12 @@ export class UserController {
       })
   }
 
-  async uploadGallery(req, res) {
+  async uploadGallery(req: Request, res: Response) {
     const body = { ...req.body }
 
     log('FIRST LOG HERE REQ.BODY:', body, 'FIRST LOG REQ.PARAMS', req.params)
     const currentUser = await UserModel.findById({ _id: req.params.id })
-    let photo
+    let photo: IPhoto
 
     if (body.file) {
       try {
@@ -231,7 +233,7 @@ export class UserController {
   }
 
   // Change Profile Picture by clicking on photos in gallery
-  async updateGallery(req, res) {
+  async updateGallery(req: Request, res: Response) {
     let newImgUrl: string, newImgId: string
     const currentUser = await UserModel.findById({ _id: req.params.id })
     try {
@@ -262,11 +264,11 @@ export class UserController {
       })
   }
 
-  async deleteGallery(req, res) {
+  async deleteGallery(req: Request, res: Response) {
     const currentUser = await UserModel.findById({ _id: req.params.id })
     const photoId = req.params.photoId
     const photoIndex = currentUser.photos.findIndex((photo) =>
-      photo._id.equals(ObjectId(photoId))
+      photo._id.equals(new ObjectId(photoId))
     )
     const photo = currentUser.photos[photoIndex]
 
@@ -301,7 +303,7 @@ export class UserController {
       })
   }
 
-  logOut(req, res) {
+  logOut(res: Response) {
     res.clearCookie('jwt-token', {
       httpOnly: true,
       secure: true,
@@ -310,7 +312,7 @@ export class UserController {
     res.sendStatus(200)
   }
 
-  deleteUser(req, res) {
+  deleteUser(req: Request, res: Response) {
     UserModel.deleteOne({ _id: req.params.id })
       .then((deletedUser) => {
         log(deletedUser)

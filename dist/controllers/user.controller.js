@@ -92,7 +92,7 @@ export class UserController {
     async findAllUsers(req, res) {
         const userInfo = await UserModel.findOne({ _id: req.userId }, { password: 0 });
         // const interests = req.query['interests'];
-        const activities = req.query['activities'];
+        const activities = req.query['activities'].toString();
         const results = await getUsersWithinRadius(userInfo?.location?.coordinates, userInfo?.radius, activities, req.userId);
         res.json(results);
     }
@@ -214,7 +214,7 @@ export class UserController {
     async deleteGallery(req, res) {
         const currentUser = await UserModel.findById({ _id: req.params.id });
         const photoId = req.params.photoId;
-        const photoIndex = currentUser.photos.findIndex((photo) => photo._id.equals(ObjectId(photoId)));
+        const photoIndex = currentUser.photos.findIndex((photo) => photo._id.equals(new ObjectId(photoId)));
         const photo = currentUser.photos[photoIndex];
         try {
             await cloudinary.uploader.destroy(photo.cloudinaryId);
@@ -240,7 +240,7 @@ export class UserController {
             log('Something went wrong with deleteGallery');
         });
     }
-    logOut(req, res) {
+    logOut(res) {
         res.clearCookie('jwt-token', {
             httpOnly: true,
             secure: true,

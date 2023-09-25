@@ -12,8 +12,8 @@
     // "skipLibCheck": true,
     "sourceMap": true,
     // "strictNullChecks": true,
-    "paths": { "*": ["node_modules/*"], "@types/*": ["types/*"] },
-    "typeRoots": ["types", "@types"],
+    "paths": { "*": ["node_modules/*"], "@types/*": ["./types/*"] },
+    "typeRoots": ["./types/*", "@types"],
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["./node_modules"]

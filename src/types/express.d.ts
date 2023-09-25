@@ -4,9 +4,11 @@
 
 import { IUser } from '../models/index'
 
-declare module 'express' {
-  interface Request {
-    userId?: string
-    user?: IUser
+declare global {
+  namespace Express {
+    interface Request {
+      userId?: string
+      user?: IUser
+    }
   }
 }

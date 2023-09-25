@@ -2,17 +2,13 @@
 import bcrypt from 'bcrypt'
 import uniqueValidator from 'mongoose-unique-validator'
 import { Document, Schema, model } from 'mongoose'
+import { IPhoto } from './index'
 
-interface Activities {
+export interface IActivities {
   [key: string]: {
     type: BooleanConstructor
     default: boolean
   }
-}
-
-interface Photo {
-  imageUrl: string
-  caption?: string
 }
 
 const activityList = [
@@ -34,7 +30,7 @@ const activityList = [
   'waterSport',
   'yoga',
 ]
-const activitiesObject: Activities = {}
+const activitiesObject: IActivities = {}
 for (const activity of activityList) {
   activitiesObject[activity] = { type: Boolean, default: false }
 }
@@ -45,7 +41,7 @@ export interface IUser extends Document {
   email: string
   password: string
   bio?: string
-  photos: Photo[]
+  photos: IPhoto[]
   cloudinaryProfileImgUrl?: string
   cloudinaryId?: string
   profession?: string
@@ -57,7 +53,7 @@ export interface IUser extends Document {
     coordinates: number[]
   }
   radius?: number
-  activities: Activities
+  activities: IActivities
   dmPrivacy: boolean
   notifications?: number
   googleAuthId?: string
@@ -97,7 +93,7 @@ const UserSchema = new Schema<IUser>({
   photos: {
     type: [{ imageUrl: String, caption: String }],
     validate: {
-      validator: function (photos: Photo[]) {
+      validator: function (photos: IPhoto[]) {
         return photos.length < 4
       },
       message: 'A user can have a maximum of 4 photos.',
