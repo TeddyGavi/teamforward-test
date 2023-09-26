@@ -1,5 +1,3 @@
-const port = process.env.PORTKEY
-console.log(process.env)
 import dotenv from 'dotenv'
 import express, { NextFunction, Request, Response } from 'express'
 import cookieParser from 'cookie-parser'
@@ -11,6 +9,7 @@ import { CHAT } from './controllers/index'
 // set up
 dotenv.config()
 const app = express()
+const port = process.env.PORTKEY
 
 // configure Passport
 // require("./Config/passport");
