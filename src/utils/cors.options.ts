@@ -4,7 +4,7 @@ import cors, { CorsOptions } from 'cors'
  * Class for configuring CORS (Cross-Origin Resource Sharing) options.
  * @class CorsConfig
  */
-class CorsConfig {
+export class CorsConfig {
   private corsOptions: CorsOptions
 
   constructor(context: 'socket' | 'api') {
@@ -45,5 +45,3 @@ class CorsConfig {
     return cors(this.corsOptions)
   }
 }
-
-export default CorsConfig

@@ -1,12 +1,18 @@
-import { UserModel, ChatRoomModel, IndividualMessageModel, } from '../models/index';
-import mongoose from 'mongoose';
-export class ChatController {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ChatController = void 0;
+const index_1 = require("../models/index");
+const mongoose_1 = __importDefault(require("mongoose"));
+class ChatController {
     constructor() { }
     //CHATROOM
     async createNewChatRoom(req, res) {
         const { otherUserId } = req.body;
         // console.log("controller user objects", req.userId, otherUserId)
-        const chatRoomExists = await ChatRoomModel.findOne({
+        const chatRoomExists = await index_1.ChatRoomModel.findOne({
             userIds: { $all: [req.userId, otherUserId] },
         });
         if (chatRoomExists) {
@@ -16,10 +22,10 @@ export class ChatController {
         else {
             try {
                 // console.log("Creating new chatroom...")
-                const newChatRoom = await ChatRoomModel.create({
+                const newChatRoom = await index_1.ChatRoomModel.create({
                     userIds: [
-                        new mongoose.Types.ObjectId(req.userId),
-                        new mongoose.Types.ObjectId(otherUserId),
+                        new mongoose_1.default.Types.ObjectId(req.userId),
+                        new mongoose_1.default.Types.ObjectId(otherUserId),
                     ],
                 });
                 res.json(newChatRoom);
@@ -32,9 +38,9 @@ export class ChatController {
     async findInbox(req, res) {
         try {
             //finds all chatRoom instances where logged in user is listed in userIds
-            const chatRoomList = await ChatRoomModel.find({
+            const chatRoomList = await index_1.ChatRoomModel.find({
                 // userIds: {$in: [req.userId]}
-                userIds: { $in: [new mongoose.Types.ObjectId(req.userId)] },
+                userIds: { $in: [new mongoose_1.default.Types.ObjectId(req.userId)] },
                 //sorts by updated at date
             }).sort({ updatedAt: -1 });
             //create set for all userIds gathered and does not allow duplicates
@@ -51,10 +57,10 @@ export class ChatController {
             //turns set into an array
             const userIdArray = Array.from(userIdSet).map((oneUserId) => {
                 if (typeof oneUserId === 'string')
-                    return new mongoose.Types.ObjectId(oneUserId);
+                    return new mongoose_1.default.Types.ObjectId(oneUserId);
             });
             //finds user objects by each _id in userIdArray
-            const otherUsers = await UserModel.find({
+            const otherUsers = await index_1.UserModel.find({
                 _id: { $in: userIdArray },
             }, { password: 0 });
             const returnList = [];
@@ -84,10 +90,10 @@ export class ChatController {
     async deleteChat(req, res) {
         try {
             // console.log(req.params);
-            const messagesDeleted = await IndividualMessageModel.deleteMany({
+            const messagesDeleted = await index_1.IndividualMessageModel.deleteMany({
                 chatRoomId: req.params.chatRoomId,
             });
-            const chatRoomDeleted = await ChatRoomModel.deleteOne({
+            const chatRoomDeleted = await index_1.ChatRoomModel.deleteOne({
                 _id: req.params.chatRoomId,
             });
             res.status(200).json({ messagesDeleted, chatRoomDeleted });
@@ -99,7 +105,7 @@ export class ChatController {
     //Messaging
     createNewMessage(io, data) {
         const { message, to, chatRoomId, from } = data;
-        IndividualMessageModel.create({
+        index_1.IndividualMessageModel.create({
             chatRoomId,
             from,
             to,
@@ -114,7 +120,7 @@ export class ChatController {
         });
     }
     updateMessage(req, res) {
-        IndividualMessageModel.findOneAndUpdate({ _id: req.params.messageId, to: req.userId }, { unread: false }, { new: true })
+        index_1.IndividualMessageModel.findOneAndUpdate({ _id: req.params.messageId, to: req.userId }, { unread: false }, { new: true })
             .then(() => res.json('message read'))
             .catch((err) => console.log('update message failed', err));
     }
@@ -122,7 +128,7 @@ export class ChatController {
         try {
             //user sends in chatRoomId
             //findOne chatRoom
-            const oneChatRoom = await ChatRoomModel.findOne({
+            const oneChatRoom = await index_1.ChatRoomModel.findOne({
                 _id: req.params.chatRoomId,
             });
             if (!oneChatRoom) {
@@ -135,12 +141,12 @@ export class ChatController {
                     otherUserId = userId;
                 }
             }
-            const otherUserObject = await UserModel.findOne({ _id: otherUserId }, { password: 0 });
+            const otherUserObject = await index_1.UserModel.findOne({ _id: otherUserId }, { password: 0 });
             if (!otherUserObject) {
                 res.status(404).json('The other user could not be found.');
             }
             //find all messages by chatRoomId
-            const chatRoomMessages = await IndividualMessageModel.find({
+            const chatRoomMessages = await index_1.IndividualMessageModel.find({
                 chatRoomId: oneChatRoom._id,
             }).sort({ createdAt: 1 });
             if (!chatRoomMessages) {
@@ -162,7 +168,7 @@ export class ChatController {
         }
     }
     deleteMessage(req, res) {
-        IndividualMessageModel.deleteOne({ _id: req.params.messageId })
+        index_1.IndividualMessageModel.deleteOne({ _id: req.params.messageId })
             .then((deleteMessage) => {
             res.json(deleteMessage);
         })
@@ -172,7 +178,7 @@ export class ChatController {
     //unread counts
     async unreadCount(req, res) {
         try {
-            const count = await IndividualMessageModel.count({
+            const count = await index_1.IndividualMessageModel.count({
                 to: req.userId,
                 unread: true,
             });
@@ -184,4 +190,5 @@ export class ChatController {
         }
     }
 }
+exports.ChatController = ChatController;
 //# sourceMappingURL=messages.controller.js.map

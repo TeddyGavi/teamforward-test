@@ -1,17 +1,19 @@
-import { Schema, model } from 'mongoose';
-const IndividualMessageSchema = new Schema({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = require("mongoose");
+const IndividualMessageSchema = new mongoose_1.Schema({
     chatRoomId: {
-        type: Schema.Types.ObjectId,
+        type: mongoose_1.Schema.Types.ObjectId,
         ref: 'ChatRoom',
         required: true,
     },
     from: {
-        type: Schema.Types.ObjectId,
+        type: mongoose_1.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     },
     to: {
-        type: Schema.Types.ObjectId,
+        type: mongoose_1.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     },
@@ -23,6 +25,6 @@ const IndividualMessageSchema = new Schema({
         default: true,
     },
 }, { timestamps: true });
-const IndividualMessageModel = model('IndividualMessage', IndividualMessageSchema);
-export default IndividualMessageModel;
+const IndividualMessageModel = (0, mongoose_1.model)('IndividualMessage', IndividualMessageSchema);
+exports.default = IndividualMessageModel;
 //# sourceMappingURL=Messaging.js.map

@@ -1,5 +1,7 @@
-import { Schema, model } from 'mongoose';
-const PhotoSchema = new Schema({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = require("mongoose");
+const PhotoSchema = new mongoose_1.Schema({
     cloudinaryImgUrl: {
         type: String,
     },
@@ -13,6 +15,6 @@ const PhotoSchema = new Schema({
     //   require: true,
     // },
 });
-const PhotoModel = model('Photo', PhotoSchema);
-export default PhotoModel;
+const PhotoModel = (0, mongoose_1.model)('Photo', PhotoSchema);
+exports.default = PhotoModel;
 //# sourceMappingURL=Photo.js.map

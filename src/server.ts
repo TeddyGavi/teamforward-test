@@ -1,4 +1,5 @@
 const port = process.env.PORTKEY
+console.log(process.env)
 import dotenv from 'dotenv'
 import express, { NextFunction, Request, Response } from 'express'
 import cookieParser from 'cookie-parser'
@@ -25,7 +26,7 @@ const socketCorsConfig = new CorsConfig('socket').getCorsOptions()
 app.use(apiCorsConfig)
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.locals.user = req.user
+  res.locals.user = req.body.user
   next()
 })
 

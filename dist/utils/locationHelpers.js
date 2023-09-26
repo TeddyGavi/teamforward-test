@@ -1,20 +1,27 @@
-import fetch from 'node-fetch';
-import { UserModel } from '../models/index';
-import { log } from './logging';
-export const getLocationHelper = async (address) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getUsersWithinRadius = exports.getLocationHelper = void 0;
+const node_fetch_1 = __importDefault(require("node-fetch"));
+const index_1 = require("../models/index");
+const logging_1 = require("./logging");
+const getLocationHelper = async (address) => {
     try {
         const url = `http://api.positionstack.com/v1/forward?access_key=${process.env.POSITIONSTACK_KEY}&query=${address}`;
-        const response = await fetch(url);
+        const response = await (0, node_fetch_1.default)(url);
         //TODO handle non 200 responses (200 means ok)
         const responseJson = await response.json();
-        log(responseJson);
+        (0, logging_1.log)(responseJson);
         return responseJson.data;
     }
     catch (expection) {
         console.log('something went wrong with getLocationHelper function', expection);
     }
 };
-export const getUsersWithinRadius = async (coordinates, radius, activities, userId) => {
+exports.getLocationHelper = getLocationHelper;
+const getUsersWithinRadius = async (coordinates, radius, activities, userId) => {
     try {
         // let splitInterests = interests?.split(",") || [];
         // let interestQuery = [];
@@ -48,11 +55,12 @@ export const getUsersWithinRadius = async (coordinates, radius, activities, user
         if (activities) {
             findQuery.$and.push({ $or: activityQuery });
         }
-        const results = await UserModel.find(findQuery);
+        const results = await index_1.UserModel.find(findQuery);
         return results;
     }
     catch (expection) {
         console.log('Something went wrong with getUserWithRadius function', expection);
     }
 };
+exports.getUsersWithinRadius = getUsersWithinRadius;
 //# sourceMappingURL=locationHelpers.js.map

@@ -1,7 +1,12 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 // const GeoJSON = require('mongoose-geojson-schema')
-import bcrypt from 'bcrypt';
-import uniqueValidator from 'mongoose-unique-validator';
-import { Schema, model } from 'mongoose';
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const mongoose_unique_validator_1 = __importDefault(require("mongoose-unique-validator"));
+const mongoose_1 = require("mongoose");
 const activityList = [
     'networking',
     'mentorship',
@@ -25,7 +30,7 @@ const activitiesObject = {};
 for (const activity of activityList) {
     activitiesObject[activity] = { type: Boolean, default: false };
 }
-const UserSchema = new Schema({
+const UserSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
         required: [true, 'A first name is required.'],
@@ -119,13 +124,13 @@ const UserSchema = new Schema({
         default: false,
     },
 });
-UserSchema.plugin(uniqueValidator);
+UserSchema.plugin(mongoose_unique_validator_1.default);
 UserSchema.pre('save', async function (next) {
-    bcrypt.hash(this.password, 10).then((hash) => {
+    bcrypt_1.default.hash(this.password, 10).then((hash) => {
         this.password = hash;
         next();
     });
 });
-const UserModel = model('User', UserSchema);
-export default UserModel;
+const UserModel = (0, mongoose_1.model)('User', UserSchema);
+exports.default = UserModel;
 //# sourceMappingURL=User.js.map

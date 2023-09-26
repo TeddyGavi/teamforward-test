@@ -16,9 +16,9 @@ export class ChatController {
   //CHATROOM
   async createNewChatRoom(req: Request, res: Response): Promise<void> {
     const { otherUserId } = req.body
-    // console.log("controller user objects", req.userId, otherUserId)
+    // console.log("controller user objects", req.body.userId, otherUserId)
     const chatRoomExists = await ChatRoomModel.findOne({
-      userIds: { $all: [req.userId, otherUserId] },
+      userIds: { $all: [req.body.userId, otherUserId] },
     })
 
     if (chatRoomExists) {
@@ -29,7 +29,7 @@ export class ChatController {
         // console.log("Creating new chatroom...")
         const newChatRoom = await ChatRoomModel.create({
           userIds: [
-            new mongoose.Types.ObjectId(req.userId),
+            new mongoose.Types.ObjectId(req.body.userId),
             new mongoose.Types.ObjectId(otherUserId),
           ],
         })
@@ -44,8 +44,8 @@ export class ChatController {
     try {
       //finds all chatRoom instances where logged in user is listed in userIds
       const chatRoomList = await ChatRoomModel.find({
-        // userIds: {$in: [req.userId]}
-        userIds: { $in: [new mongoose.Types.ObjectId(req.userId)] },
+        // userIds: {$in: [req.body.userId]}
+        userIds: { $in: [new mongoose.Types.ObjectId(req.body.userId)] },
         //sorts by updated at date
       }).sort({ updatedAt: -1 })
 
@@ -59,7 +59,7 @@ export class ChatController {
         }
       })
       // removes the logged in user from the set
-      userIdSet.delete(req.userId)
+      userIdSet.delete(req.body.userId)
       //turns set into an array
       const userIdArray = Array.from(userIdSet).map((oneUserId) => {
         if (typeof oneUserId === 'string')
@@ -85,7 +85,8 @@ export class ChatController {
       for (const oneChatRoom of chatRoomList) {
         //sets otherUserId to _id listed when oneChatRoom.userIds is not the logged in user i.e. other person's id
         otherUserId = oneChatRoom.userIds.find(
-          (userId: mongoose.Types.ObjectId) => userId.toString() !== req.userId
+          (userId: mongoose.Types.ObjectId) =>
+            userId.toString() !== req.body.userId
         )
         //searches through otherUsers array to find where userObject id matches the other person's id and returns true
         user = otherUsers.find((userObject) => {
@@ -139,7 +140,7 @@ export class ChatController {
 
   updateMessage(req: Request, res: Response) {
     IndividualMessageModel.findOneAndUpdate(
-      { _id: req.params.messageId, to: req.userId },
+      { _id: req.params.messageId, to: req.body.userId },
       { unread: false },
       { new: true }
     )
@@ -160,7 +161,7 @@ export class ChatController {
       //find user by chatRoom.userIds
       let otherUserId
       for (const userId of oneChatRoom!.userIds) {
-        if (userId.toString() !== req.userId) {
+        if (userId.toString() !== req.body.userId) {
           otherUserId = userId
         }
       }
@@ -207,7 +208,7 @@ export class ChatController {
   async unreadCount(req: Request, res: Response) {
     try {
       const count = await IndividualMessageModel.count({
-        to: req.userId,
+        to: req.body.userId,
         unread: true,
       })
       res.json(count)

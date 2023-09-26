@@ -2,7 +2,7 @@
   "name": "teamforward-api",
   "version": "1.0.0",
   "description": "<div align=\"center\">\r    <h1>Team Forward</h1>\r </div>",
-  "main": "src/server.js",
+  "main": "dist/server.js",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -11,11 +11,10 @@
     "url": "git+https://github.com/chingu-voyages/teamforward-be.git"
   },
   "homepage": "https://github.com/chingu-voyages/V44-TeamForward#readme",
-  "type": "module",
   "scripts": {
     "build": "tsc -p .",
-    "start": "NODE_PATH=./dist NODE_ENV=production node ./dist/server.js",
-    "dev": "NODE_ENV=development nodemon ./src/server.ts",
+    "start": "NODE_PATH=./dist NODE_ENV=production node dist/server.js",
+    "dev": "NODE_PATH=./dist NODE_ENV=development npm run build && nodemon src/server.ts",
     "repl": "node",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",

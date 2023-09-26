@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "baseUrl": "./src",
+    // "rootDir": "./src",
     "incremental": true,
     "outDir": "./dist",
     "esModuleInterop": true,
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "CommonJS",
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     // "strict": true,
@@ -15,6 +16,6 @@
     "paths": { "*": ["node_modules/*"], "@types/*": ["./types/*"] },
     "typeRoots": ["./types/*", "@types"],
   },
-  "include": ["./src/**/*.ts"],
+  "include": ["./src/**/*.ts", "./types/express.d.ts"],
   "exclude": ["./node_modules"]
 }

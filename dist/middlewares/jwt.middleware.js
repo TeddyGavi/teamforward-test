@@ -1,6 +1,12 @@
-import jwt from 'jsonwebtoken';
-export const authenticate = (req, res, next) => {
-    const token = jwt
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.authenticate = void 0;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const authenticate = (req, res, next) => {
+    const token = jsonwebtoken_1.default
         .verify(req.cookies['jwt-token'], (process.env.SecretKeyOne ??= ''))
         .toString();
     if (!token) {
@@ -8,7 +14,7 @@ export const authenticate = (req, res, next) => {
             .status(401)
             .json({ verified: false, message: 'Token not provided' });
     }
-    jwt.verify(token, process.env.SecretKeyOne, (err, payload) => {
+    jsonwebtoken_1.default.verify(token, process.env.SecretKeyOne, (err, payload) => {
         if (err) {
             console.error(err);
             res
@@ -21,4 +27,5 @@ export const authenticate = (req, res, next) => {
         }
     });
 };
+exports.authenticate = authenticate;
 //# sourceMappingURL=jwt.middleware.js.map

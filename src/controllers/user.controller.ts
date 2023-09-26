@@ -32,8 +32,8 @@ export class UserController {
   }
 
   loggedInUser(req: Request, res: Response) {
-    log('userId', req.userId)
-    UserModel.findOne({ _id: req.userId }, { password: 0 })
+    log('userId', req.body.userId)
+    UserModel.findOne({ _id: req.body.userId }, { password: 0 })
       .then((loggedUser) => {
         log(loggedUser)
         res.json(loggedUser)
@@ -104,7 +104,7 @@ export class UserController {
 
   async findAllUsers(req: Request, res: Response) {
     const userInfo = await UserModel.findOne(
-      { _id: req.userId },
+      { _id: req.body.userId },
       { password: 0 }
     )
     // const interests = req.query['interests'];
@@ -114,7 +114,7 @@ export class UserController {
       userInfo?.location?.coordinates,
       userInfo?.radius,
       activities,
-      req.userId
+      req.body.userId
     )
     res.json(results)
   }

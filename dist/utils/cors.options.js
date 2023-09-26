@@ -1,4 +1,10 @@
-import cors from 'cors';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.CorsConfig = void 0;
+const cors_1 = __importDefault(require("cors"));
 /**
  * Class for configuring CORS (Cross-Origin Resource Sharing) options.
  * @class CorsConfig
@@ -38,8 +44,8 @@ class CorsConfig {
         return this.corsOptions;
     }
     getCorsMiddleware() {
-        return cors(this.corsOptions);
+        return (0, cors_1.default)(this.corsOptions);
     }
 }
-export default CorsConfig;
+exports.CorsConfig = CorsConfig;
 //# sourceMappingURL=cors.options.js.map

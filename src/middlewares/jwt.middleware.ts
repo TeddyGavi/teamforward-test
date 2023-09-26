@@ -25,7 +25,7 @@ export const authenticate = (
           .status(401)
           .json({ verified: false, message: 'token verification failed' })
       } else {
-        req.userId = payload.id
+        req.body.userId = payload.id
         next()
       }
     }

@@ -1,13 +1,15 @@
-import { Schema, model } from 'mongoose';
-const ChatRoomSchema = new Schema({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = require("mongoose");
+const ChatRoomSchema = new mongoose_1.Schema({
     userIds: [
         {
-            type: Schema.Types.ObjectId,
+            type: mongoose_1.Schema.Types.ObjectId,
             ref: 'User',
             required: true,
         },
     ],
 }, { timestamps: true });
-const ChatRoomModel = model('ChatRoom', ChatRoomSchema);
-export default ChatRoomModel;
+const ChatRoomModel = (0, mongoose_1.model)('ChatRoom', ChatRoomSchema);
+exports.default = ChatRoomModel;
 //# sourceMappingURL=ChatRoom.js.map
