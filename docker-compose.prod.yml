@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  teamforward-api:
+  teamforward:
     build:
       target: production
-    command: node dist/index.js
+    command: node dist/server.js

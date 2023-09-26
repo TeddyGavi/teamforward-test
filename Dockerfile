@@ -1,10 +1,12 @@
 FROM node:18 as base
 WORKDIR /app
 COPY package*.json ./
+RUN npm i
 COPY . .
 
-RUN npm i
 RUN npm run build
+
+RUN rm -rf node_modules
 
 FROM base as production
 
@@ -16,4 +18,4 @@ ENV NODE_PATH=./dist
 
 EXPOSE 8080
 
-# CMD [ "node", "./src/server.js" ]
+CMD [ "node", "./src/server.js" ]
