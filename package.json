@@ -14,7 +14,7 @@
   "scripts": {
     "build": "tsc -p .",
     "start": "NODE_PATH=./dist NODE_ENV=production node dist/server.js",
-    "dev": "NODE_PATH=./dist NODE_ENV=development npm run build && nodemon src/server.ts",
+    "dev": "NODE_PATH=./dist NODE_ENV=development nodemon src/server.ts",
     "repl": "node",
     "format:check": "prettier --check .",
     "format:fix": "prettier --write .",

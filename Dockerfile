@@ -6,8 +6,6 @@ COPY . .
 
 RUN npm run build
 
-RUN rm -rf node_modules
-
 FROM base as production
 
 COPY --from=base ./app/dist ./dist
@@ -18,4 +16,4 @@ ENV NODE_PATH=./dist
 
 EXPOSE 8080
 
-CMD [ "node", "./src/server.js" ]
+CMD [ "node", "./dist/server.js" ]
